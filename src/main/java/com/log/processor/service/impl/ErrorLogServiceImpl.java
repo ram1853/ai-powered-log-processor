@@ -59,4 +59,9 @@ public class ErrorLogServiceImpl implements IErrorLogService {
     public void saveErrorLogs(List<ErrorLog> errorLogs) {
         errorLogRepository.saveErrorLogs(errorLogs);
     }
+
+    @Override
+    public List<ErrorLog> loadErrorLogs(String aiAnalysisResponse, String index) {
+        return errorLogRepository.loadErrorLogs(aiAnalysisResponse, index);
+    }
 }

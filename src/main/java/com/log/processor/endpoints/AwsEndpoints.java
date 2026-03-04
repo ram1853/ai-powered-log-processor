@@ -1,8 +1,11 @@
 package com.log.processor.endpoints;
 
+import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
+import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import com.amazonaws.services.lambda.runtime.events.CloudWatchLogsEvent;
 import com.log.processor.business.AiProcessor;
 import com.log.processor.common.entity.ErrorLog;
+import com.log.processor.handler.APIGwHandler;
 import com.log.processor.handler.CloudWatchHandler;
 import com.log.processor.service.IErrorLogService;
 import com.log.processor.service.IRagAiService;
@@ -34,5 +37,10 @@ public class AwsEndpoints {
     @Bean("aiProcessor")
     public Consumer<List<ErrorLog>> aiProcessor() {
         return new AiProcessor(ragAiService, errorLogService);
+    }
+
+    @Bean("apiGwHandler")
+    public Function<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> apiGwHandler() {
+        return new APIGwHandler(errorLogService);
     }
 }

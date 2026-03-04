@@ -14,4 +14,6 @@ public interface IErrorLogService {
     ErrorLog loadErrorLog(String eventId, long ingestionTime);
 
     void saveErrorLogs(List<ErrorLog> errorLogs);
+
+    List<ErrorLog> loadErrorLogs(String aiAnalysisResponse, String index);
 }

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSecondaryPartitionKey;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortKey;
 
 @DynamoDbBean
@@ -13,6 +14,7 @@ public class ErrorLog {
 
     private String eventId;
     private long ingestionTime;
+    private String aiAnalysisResponse;
 
     @Getter
     private String message;
@@ -20,8 +22,10 @@ public class ErrorLog {
     @Getter
     private AiAnalysisStatus aiAnalysisStatus;
 
-    @Getter
-    private String aiAnalysisResponse;
+    @DynamoDbSecondaryPartitionKey(indexNames = "human-intervention-index")
+    public String getAiAnalysisResponse() {
+        return aiAnalysisResponse;
+    }
 
     @DynamoDbPartitionKey
     public String getEventId() {

@@ -87,6 +87,13 @@ resource "aws_iam_role_policy_attachment" "attach-dynamodb-policy" {
   policy_arn = aws_iam_policy.dynamodb-policy.arn
 }
 
+resource "aws_lambda_permission" "allow_cloudwatch_logs_invoke" {
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.log-processor-tf.function_name
+  principal     = "logs.amazonaws.com"
+  source_arn    = "arn:aws:logs:ap-south-1:545009866715:log-group:log-events:*"
+}
+
 resource "aws_lambda_function" "log-processor-tf" {
   function_name     = var.function_name
   role              = aws_iam_role.log-processor-role.arn
@@ -101,9 +108,4 @@ resource "aws_lambda_function" "log-processor-tf" {
   }
   filename         = "${path.module}/../target/log-processor-0.0.1-SNAPSHOT-aws.jar"
   source_code_hash = filebase64sha256("${path.module}/../target/log-processor-0.0.1-SNAPSHOT-aws.jar") 
-}
-
-output "lambda-arn" {
-  description = "ARN of log-processor lambda"
-  value       = aws_lambda_function.log-processor-tf.arn
 }

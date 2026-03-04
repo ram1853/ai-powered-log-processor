@@ -11,4 +11,6 @@ public interface IErrorLogRepository {
     void updateErrorLog(ErrorLog errorLog);
 
     ErrorLog loadErrorLog(String eventId, long ingestionTime);
+
+    List<ErrorLog> loadErrorLogs(String aiAnalysisResponse, String index);
 }

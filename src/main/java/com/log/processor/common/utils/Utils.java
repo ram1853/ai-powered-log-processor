@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.zip.GZIPInputStream;
 
@@ -53,6 +54,16 @@ public final class Utils {
             return Optional.ofNullable(OBJECT_MAPPER.readValue(jsonString, clazz));
         } catch (JsonProcessingException e) {
             log.error("Failed to parse json string", e);
+            return Optional.empty();
+        }
+    }
+
+    public static Optional<String> objectToJsonString(Object object) {
+        try {
+            log.info("Converting object to json-string: {}", object);
+            return Optional.ofNullable(OBJECT_MAPPER.writeValueAsString(object));
+        } catch (JsonProcessingException e) {
+            log.error("Failed to convert object to json-string", e);
             return Optional.empty();
         }
     }

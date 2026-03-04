@@ -7,17 +7,16 @@ import com.log.processor.dao.IErrorLogRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import software.amazon.awssdk.core.pagination.sync.SdkIterable;
 import software.amazon.awssdk.enhanced.dynamodb.*;
-import software.amazon.awssdk.enhanced.dynamodb.model.BatchWriteItemEnhancedRequest;
-import software.amazon.awssdk.enhanced.dynamodb.model.IgnoreNullsMode;
-import software.amazon.awssdk.enhanced.dynamodb.model.UpdateItemEnhancedRequest;
-import software.amazon.awssdk.enhanced.dynamodb.model.WriteBatch;
+import software.amazon.awssdk.enhanced.dynamodb.model.*;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 import software.amazon.awssdk.services.dynamodb.model.DynamoDbException;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Repository
 @Slf4j
@@ -58,6 +57,9 @@ public class ErrorLogRepositoryImpl implements IErrorLogRepository {
     @Override
     public void updateErrorLog(ErrorLog errorLog) {
         try {
+            DynamoDbTable<ErrorLog> errorLogTable = dynamoDbEnhancedClient
+                    .table(Constants.ERROR_LOG_TABLE, TableSchema.fromBean(ErrorLog.class));
+
             Map<String, String> expressionNames = new HashMap<>();
             expressionNames.put("#PK", "eventId");
             expressionNames.put("#SK", "ingestionTime");
@@ -78,6 +80,7 @@ public class ErrorLogRepositoryImpl implements IErrorLogRepository {
                             .conditionExpression(itemExistsExpression)
                             .ignoreNullsMode(IgnoreNullsMode.SCALAR_ONLY)
                             .build();
+            errorLogTable.updateItem(updateRequest);
         } catch (DynamoDbException e) {
             log.error("Failed to update Error log to dynamo", e);
             throw new DataLakeException("Failed to update Error log to dynamo: "+errorLog);
@@ -93,6 +96,26 @@ public class ErrorLogRepositoryImpl implements IErrorLogRepository {
         } catch (DynamoDbException e) {
             log.error("Failed to fetch Error log from dynamo", e);
             throw new DataLakeException("Failed to fetch Error log from dynamo: "+eventId+","+ingestionTime);
+        }
+    }
+
+    @Override
+    public List<ErrorLog> loadErrorLogs(String aiAnalysisResponse, String index) {
+        try {
+            DynamoDbTable<ErrorLog> errorLogTable = dynamoDbEnhancedClient
+                    .table(Constants.ERROR_LOG_TABLE, TableSchema.fromBean(ErrorLog.class));
+            DynamoDbIndex<ErrorLog> errorLogDynamoDbIndex = errorLogTable.index(index);
+
+            QueryConditional queryConditional = QueryConditional.keyEqualTo(Key.builder().partitionValue(aiAnalysisResponse).build());
+            QueryEnhancedRequest queryEnhancedRequest = QueryEnhancedRequest.builder()
+                    .queryConditional(queryConditional)
+                    .build();
+            SdkIterable<Page<ErrorLog>> sdkIterable = errorLogDynamoDbIndex.query(queryEnhancedRequest);
+            PageIterable<ErrorLog> pageIterable = PageIterable.create(sdkIterable);
+            return pageIterable.items().stream().collect(Collectors.toList());
+        } catch (DynamoDbException e) {
+            log.error("Failed to retrieve error logs from index", e);
+            throw new DataLakeException("Failed to fetch Error logs from dynamo. Index: "+index+", aiAnalysisResponse: "+aiAnalysisResponse);
         }
     }
 }
