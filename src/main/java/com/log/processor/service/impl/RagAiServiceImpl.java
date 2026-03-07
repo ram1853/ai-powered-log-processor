@@ -5,6 +5,7 @@ import com.log.processor.common.exception.AiException;
 import com.log.processor.service.IRagAiService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.bedrockagentruntime.BedrockAgentRuntimeClient;
 import software.amazon.awssdk.services.bedrockagentruntime.model.*;
@@ -12,6 +13,9 @@ import software.amazon.awssdk.services.bedrockagentruntime.model.*;
 @Service
 @Slf4j
 public class RagAiServiceImpl implements IRagAiService {
+
+    @Value("${knowledge_base_id}")
+    private String knowledge_base_id;
 
     private final String TEMPLATE = """
             You are a production support assistant.
@@ -66,7 +70,7 @@ public class RagAiServiceImpl implements IRagAiService {
 
             KnowledgeBaseRetrieveAndGenerateConfiguration knowledgeBaseRetrieveAndGenerateConfiguration =
                     KnowledgeBaseRetrieveAndGenerateConfiguration.builder()
-                            .knowledgeBaseId(Constants.KNOWLEDGE_BASE_ID)
+                            .knowledgeBaseId(knowledge_base_id)
                             .generationConfiguration(generationConfiguration)
                             .modelArn(Constants.MODEL_ARN)
                             .build();

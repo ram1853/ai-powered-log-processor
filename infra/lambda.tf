@@ -104,6 +104,7 @@ resource "aws_lambda_function" "log-processor-tf" {
     variables = {
         logging_level_com_log_processor = "INFO"
         spring_cloud_function_definition = "cloudWatchHandler|aiProcessor"
+        knowledge_base_id = aws_bedrockagent_knowledge_base.log-processor-knowledge-base.id
     }
   }
   filename         = "${path.module}/../target/log-processor-0.0.1-SNAPSHOT-aws.jar"

@@ -132,7 +132,7 @@ resource "aws_s3vectors_index" "s3-vector-bucket-index" {
   }
 }
 
-resource "aws_bedrockagent_knowledge_base" "log-processor-knowledge-base-tf" {
+resource "aws_bedrockagent_knowledge_base" "log-processor-knowledge-base" {
   name     = "log-processor-knowledge-base"
   role_arn = aws_iam_role.knowledge-base-role.arn
   knowledge_base_configuration {
@@ -157,7 +157,7 @@ resource "aws_bedrockagent_knowledge_base" "log-processor-knowledge-base-tf" {
 }
 
 resource "aws_bedrockagent_data_source" "data-source" {
-  knowledge_base_id = aws_bedrockagent_knowledge_base.log-processor-knowledge-base-tf.id
+  knowledge_base_id = aws_bedrockagent_knowledge_base.log-processor-knowledge-base.id
   name              = "knowledge-base-data-source"
   data_source_configuration {
     type = "S3"
