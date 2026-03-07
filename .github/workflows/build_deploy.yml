@@ -25,4 +25,4 @@ jobs:
 
     - name: Provision using Terraform
       run: |
-        .github/scripts/terraform.sh terraform init && terraform apply -auto-approve
+        .github/scripts/terraform.sh "terraform init && terraform apply -auto-approve"

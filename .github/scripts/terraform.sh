@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-COMMAND=$@
+COMMAND=$1
 
 echo "Running $COMMAND"
 
