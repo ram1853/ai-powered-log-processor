@@ -1,6 +1,6 @@
 locals {
     cloudwatch_log_groups = {
-    "log-events" = "log-events-error-filter-tf"
+    "log-events" = "log-events-error-filter"
     }
 }
 

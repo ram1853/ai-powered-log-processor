@@ -116,7 +116,7 @@ resource "aws_iam_role_policy_attachment" "attach-vector-store-policy" {
 }
 
 resource "aws_s3vectors_vector_bucket" "s3-vector-bucket" {
-  vector_bucket_name = "log-processor-tf-vector"
+  vector_bucket_name = "log-processor-vector"
 }
 
 resource "aws_s3vectors_index" "s3-vector-bucket-index" {
@@ -133,7 +133,7 @@ resource "aws_s3vectors_index" "s3-vector-bucket-index" {
 }
 
 resource "aws_bedrockagent_knowledge_base" "log-processor-knowledge-base-tf" {
-  name     = "log-processor-knowledge-base-tf"
+  name     = "log-processor-knowledge-base"
   role_arn = aws_iam_role.knowledge-base-role.arn
   knowledge_base_configuration {
     vector_knowledge_base_configuration {

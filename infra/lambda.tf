@@ -1,6 +1,6 @@
 variable "function_name" {
   type    = string
-  default = "log-processor-tf"
+  default = "log-processor"
 }
 
 data "aws_caller_identity" "current" {}
@@ -38,8 +38,8 @@ resource "aws_iam_policy" "cloudwatch-policy" {
   })
 }
 
-resource "aws_iam_policy" "bedrock-knowledge-base-policy-tf" {
-  name = "bedrock-knowledge-base-policy-tf"
+resource "aws_iam_policy" "bedrock-knowledge-base-policy" {
+  name = "bedrock-knowledge-base-policy"
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -79,7 +79,7 @@ resource "aws_iam_role_policy_attachment" "attach-cloudwatch-policy" {
 
 resource "aws_iam_role_policy_attachment" "attach-bedrock-knowledge-base-policy" {
   role       = aws_iam_role.log-processor-role.name
-  policy_arn = aws_iam_policy.bedrock-knowledge-base-policy-tf.arn
+  policy_arn = aws_iam_policy.bedrock-knowledge-base-policy.arn
 }
 
 resource "aws_iam_role_policy_attachment" "attach-dynamodb-policy" {
