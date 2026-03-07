@@ -9,14 +9,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
+
     - name: Prepare backend jar
       run: mvn clean package
+
+    - name: Make terraform.sh executable
+      run: chmod +x .github/scripts/terraform.sh
+
     - name: Provision using Terraform
       run: |
         .github/scripts/terraform.sh terraform init && terraform apply -auto-approve
