@@ -1,3 +1,9 @@
+variable "s3-bucket-name" {
+  type = string
+  default = "log-processor-knowledge-base"
+}
+
+
 data "aws_iam_policy_document" "assume_role_for_knowledge_base" {
     statement {
       effect = "Allow"
@@ -55,7 +61,7 @@ resource "aws_iam_policy" "s3-policy" {
         {
             Action  = ["s3:ListBucket"]
             Effect   = "Allow"
-            Resource = ["arn:aws:s3:::log-processor-knowledge-base"]
+            Resource = ["arn:aws:s3:::${var.s3-bucket-name}"]
             Condition = {
                 StringEquals = {
                   "aws:ResourceAccount" = "${data.aws_caller_identity.current.account_id}"
@@ -65,7 +71,7 @@ resource "aws_iam_policy" "s3-policy" {
         {
             Action    = ["s3:GetObject"]
             Effect    = "Allow"
-            Resource  = ["arn:aws:s3:::log-processor-knowledge-base/*"]
+            Resource  = ["arn:aws:s3:::${var.s3-bucket-name}/*"]
             Condition = {
                 StringEquals = {
                   "aws:ResourceAccount" = "${data.aws_caller_identity.current.account_id}"
@@ -162,7 +168,7 @@ resource "aws_bedrockagent_data_source" "data-source" {
   data_source_configuration {
     type = "S3"
     s3_configuration {
-      bucket_arn = "arn:aws:s3:::log-processor-knowledge-base"
+      bucket_arn = "arn:aws:s3:::${var.s3-bucket-name}"
     }
   }
 }
