@@ -9,5 +9,5 @@ resource "aws_cloudwatch_log_subscription_filter" "log_processor_lambda_logfilte
   name            = each.value
   log_group_name  = each.key
   filter_pattern  = "\"Level: Error\""
-  destination_arn = aws_lambda_function.log-processor-tf.arn
+  destination_arn = aws_lambda_function.log-processor.arn
 }
