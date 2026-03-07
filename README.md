@@ -118,6 +118,7 @@ The infrastructure includes:
 
 > **Note:**
 > The **REST API (API Gateway)** configuration is **not currently included** in the Terraform scripts.
+> S3 Bucket has to be globally unique, so replace with your bucket name in variable "s3-bucket-name" in bedrock-knowledge-base.tf
 
 ---
 
