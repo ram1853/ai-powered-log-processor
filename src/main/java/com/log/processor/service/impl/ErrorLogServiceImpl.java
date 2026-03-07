@@ -18,7 +18,7 @@ import java.util.List;
 @Slf4j
 public class ErrorLogServiceImpl implements IErrorLogService {
 
-    private final IErrorLogRepository errorLogRepository;
+    private final IErrorLogRepository errorLogRepository;//
 
     @Autowired
     public ErrorLogServiceImpl(IErrorLogRepository errorLogRepository) {
