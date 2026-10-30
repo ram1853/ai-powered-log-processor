@@ -130,7 +130,9 @@
             <!-- This plugin will create a small jar for us with only the application code and some stuffs
              The dependencies needed are downloaded and cached during the first run in aws lambda.
              For subsequent runs it takes from the cache.
-             This is in contrast to the 'fat' jar where all the dependencies, code are bundled in the jar itself -->
+             This is in contrast to the 'fat' jar where all the dependencies, code are bundled in the jar itself.
+              However while deploying to lambda, we only use the fat jar created by maven-shade-plugin below.
+              This thin/small jar can be used for any non-aws type deployments. -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

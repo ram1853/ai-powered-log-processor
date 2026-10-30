@@ -1,7 +1,7 @@
 # AI Powered Log Processor
 
 AI Powered Log Processor is a backend service that processes application logs, analyzes them using AI, and provides suggestions or possible solutions using a **business knowledge base**.
-
+#
 The system uses **Retrieval Augmented Generation (RAG)** with an **AWS Bedrock Knowledge Base** to correlate logs with known issues and operational knowledge.
 
 Detailed **functional and non-functional requirements** are available in the **GitHub Wiki**.
